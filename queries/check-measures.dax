@@ -1,0 +1,17 @@
+EVALUATE
+ROW (
+    "Planned Units", [Planned Units],
+    "Actual Units", [Actual Units],
+    "Scrap Units", [Scrap Units],
+    "Scrap Rate %", [Scrap Rate %],
+    "Production Attainment %", [Production Attainment %],
+    "Downtime Minutes", [Downtime Minutes],
+    "Inspected Units", [Inspected Units],
+    "Defect Count", [Defect Count],
+    "Defect Rate %", [Defect Rate %],
+    "Maintenance Events", [Maintenance Events],
+    "Preventive Maintenance %", [Preventive Maintenance %],
+    "Orders", [Orders],
+    "Total Revenue", [Total Revenue],
+    "Late Order %", [Late Order %]
+)

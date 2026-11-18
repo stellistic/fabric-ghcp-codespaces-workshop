@@ -1,0 +1,231 @@
+{
+  "version": 1,
+  "tables": [
+    "dim_date",
+    "dim_plant",
+    "dim_line",
+    "dim_product",
+    "dim_shift",
+    "dim_customer",
+    "dim_defect_type",
+    "dim_asset",
+    "fact_production_run",
+    "fact_quality_inspection",
+    "fact_maintenance_event",
+    "fact_customer_order"
+  ],
+  "relationships": [
+    {
+      "from_table": "fact_production_run",
+      "from_column": "DateKey",
+      "to_table": "dim_date",
+      "to_column": "DateKey",
+      "active": true
+    },
+    {
+      "from_table": "fact_production_run",
+      "from_column": "PlantKey",
+      "to_table": "dim_plant",
+      "to_column": "PlantKey",
+      "active": true
+    },
+    {
+      "from_table": "fact_production_run",
+      "from_column": "LineKey",
+      "to_table": "dim_line",
+      "to_column": "LineKey",
+      "active": true
+    },
+    {
+      "from_table": "fact_production_run",
+      "from_column": "ProductKey",
+      "to_table": "dim_product",
+      "to_column": "ProductKey",
+      "active": true
+    },
+    {
+      "from_table": "fact_production_run",
+      "from_column": "ShiftKey",
+      "to_table": "dim_shift",
+      "to_column": "ShiftKey",
+      "active": true
+    },
+    {
+      "from_table": "fact_quality_inspection",
+      "from_column": "DateKey",
+      "to_table": "dim_date",
+      "to_column": "DateKey",
+      "active": true
+    },
+    {
+      "from_table": "fact_quality_inspection",
+      "from_column": "PlantKey",
+      "to_table": "dim_plant",
+      "to_column": "PlantKey",
+      "active": true
+    },
+    {
+      "from_table": "fact_quality_inspection",
+      "from_column": "LineKey",
+      "to_table": "dim_line",
+      "to_column": "LineKey",
+      "active": true
+    },
+    {
+      "from_table": "fact_quality_inspection",
+      "from_column": "ProductKey",
+      "to_table": "dim_product",
+      "to_column": "ProductKey",
+      "active": true
+    },
+    {
+      "from_table": "fact_quality_inspection",
+      "from_column": "DefectTypeKey",
+      "to_table": "dim_defect_type",
+      "to_column": "DefectTypeKey",
+      "active": true
+    },
+    {
+      "from_table": "fact_maintenance_event",
+      "from_column": "DateKey",
+      "to_table": "dim_date",
+      "to_column": "DateKey",
+      "active": true
+    },
+    {
+      "from_table": "fact_maintenance_event",
+      "from_column": "PlantKey",
+      "to_table": "dim_plant",
+      "to_column": "PlantKey",
+      "active": true
+    },
+    {
+      "from_table": "fact_maintenance_event",
+      "from_column": "LineKey",
+      "to_table": "dim_line",
+      "to_column": "LineKey",
+      "active": true
+    },
+    {
+      "from_table": "fact_maintenance_event",
+      "from_column": "AssetKey",
+      "to_table": "dim_asset",
+      "to_column": "AssetKey",
+      "active": true
+    },
+    {
+      "from_table": "fact_customer_order",
+      "from_column": "DateKey",
+      "to_table": "dim_date",
+      "to_column": "DateKey",
+      "active": true
+    },
+    {
+      "from_table": "fact_customer_order",
+      "from_column": "PlantKey",
+      "to_table": "dim_plant",
+      "to_column": "PlantKey",
+      "active": true
+    },
+    {
+      "from_table": "fact_customer_order",
+      "from_column": "ProductKey",
+      "to_table": "dim_product",
+      "to_column": "ProductKey",
+      "active": true
+    },
+    {
+      "from_table": "fact_customer_order",
+      "from_column": "CustomerKey",
+      "to_table": "dim_customer",
+      "to_column": "CustomerKey",
+      "active": true
+    }
+  ],
+  "measures": [
+    {
+      "table": "fact_production_run",
+      "name": "Planned Units",
+      "dax": "SUM ( 'fact_production_run'[PlannedUnits] )",
+      "format": "#,0"
+    },
+    {
+      "table": "fact_production_run",
+      "name": "Actual Units",
+      "dax": "SUM ( 'fact_production_run'[ActualUnits] )",
+      "format": "#,0"
+    },
+    {
+      "table": "fact_production_run",
+      "name": "Scrap Units",
+      "dax": "SUM ( 'fact_production_run'[ScrapUnits] )",
+      "format": "#,0"
+    },
+    {
+      "table": "fact_production_run",
+      "name": "Scrap Rate %",
+      "dax": "DIVIDE ( [Scrap Units], [Actual Units] + [Scrap Units] )",
+      "format": "0.00%"
+    },
+    {
+      "table": "fact_production_run",
+      "name": "Production Attainment %",
+      "dax": "DIVIDE ( [Actual Units], [Planned Units] )",
+      "format": "0.0%"
+    },
+    {
+      "table": "fact_production_run",
+      "name": "Downtime Minutes",
+      "dax": "SUM ( 'fact_production_run'[DowntimeMinutes] )",
+      "format": "#,0"
+    },
+    {
+      "table": "fact_quality_inspection",
+      "name": "Inspected Units",
+      "dax": "SUM ( 'fact_quality_inspection'[InspectedUnits] )",
+      "format": "#,0"
+    },
+    {
+      "table": "fact_quality_inspection",
+      "name": "Defect Count",
+      "dax": "SUM ( 'fact_quality_inspection'[DefectCount] )",
+      "format": "#,0"
+    },
+    {
+      "table": "fact_quality_inspection",
+      "name": "Defect Rate %",
+      "dax": "DIVIDE ( [Defect Count], [Inspected Units] )",
+      "format": "0.00%"
+    },
+    {
+      "table": "fact_maintenance_event",
+      "name": "Maintenance Events",
+      "dax": "COUNTROWS ( 'fact_maintenance_event' )",
+      "format": "#,0"
+    },
+    {
+      "table": "fact_maintenance_event",
+      "name": "Preventive Maintenance %",
+      "dax": "DIVIDE ( CALCULATE ( [Maintenance Events], 'fact_maintenance_event'[PreventiveFlag] = 1 ), [Maintenance Events] )",
+      "format": "0.0%"
+    },
+    {
+      "table": "fact_customer_order",
+      "name": "Orders",
+      "dax": "COUNTROWS ( 'fact_customer_order' )",
+      "format": "#,0"
+    },
+    {
+      "table": "fact_customer_order",
+      "name": "Total Revenue",
+      "dax": "SUM ( 'fact_customer_order'[Revenue] )",
+      "format": "#,0"
+    },
+    {
+      "table": "fact_customer_order",
+      "name": "Late Order %",
+      "dax": "DIVIDE ( SUM ( 'fact_customer_order'[LateShipmentFlag] ), [Orders] )",
+      "format": "0.0%"
+    }
+  ]
+}

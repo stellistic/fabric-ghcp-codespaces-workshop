@@ -1,0 +1,14 @@
+version: 1
+profile: synthetic-core
+seed: 20261001
+fabric:
+  tenant_id: null
+  workspace_id: null
+  workspace_name: null
+  lakehouse_id: null
+  model_id: null
+  sandbox: false
+security:
+  approved_data: synthetic-only
+  allow_live_read: false
+  allow_live_write: false

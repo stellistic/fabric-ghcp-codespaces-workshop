@@ -1,0 +1,12 @@
+{
+  "name": "github-copilot-workshop-tools",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Pinned terminal tooling for the browser-first GitHub Copilot Workshop.",
+  "scripts": {
+    "copilot": "copilot"
+  },
+  "devDependencies": {
+    "@github/copilot": "1.0.114"
+  }
+}
