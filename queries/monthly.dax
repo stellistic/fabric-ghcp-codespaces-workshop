@@ -1,0 +1,6 @@
+EVALUATE
+SUMMARIZECOLUMNS (
+    'dim_date'[YearMonth],
+    "Actual Units", [Actual Units]
+)
+ORDER BY 'dim_date'[YearMonth]

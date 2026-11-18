@@ -1,0 +1,3 @@
+*.pdf binary
+# Synthetic extracts are byte-for-byte fixtures, including intentional padding.
+*.csv -text whitespace=cr-at-eol

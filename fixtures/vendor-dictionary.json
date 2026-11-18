@@ -1,0 +1,16 @@
+{
+  "status": "deliberately imperfect teaching input, not canonical",
+  "overrides": {
+    "FactProductionRun": {
+      "omit": ["OperatorTeam"],
+      "add": ["RunDurationMinutes"],
+      "claim": "One unique non-null production run per row; all dates are valid."
+    },
+    "DimCustomer": {"omit": [], "add": [], "claim": "CustomerKey is unique in the delivered file."}
+  },
+  "candidate_relationships": [
+    {"from_table":"FactCustomerOrder","from_column":"CustomerKey","to_table":"DimCustomer","to_column":"CustomerKey"},
+    {"from_table":"FactProductionRun","from_column":"PlantKey","to_table":"DimPlant","to_column":"PlantKey"},
+    {"from_table":"FactQualityInspection","from_column":"BatchID","to_table":"FactProductionRun","to_column":"BatchID"}
+  ]
+}
