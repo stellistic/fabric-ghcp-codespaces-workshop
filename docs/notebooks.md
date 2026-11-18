@@ -52,6 +52,9 @@ with `notebookutils`, Spark `try_*` functions, and a schema-enabled Lakehouse.
 Runtime 1.3 or a newer tenant-approved equivalent is the intended baseline.
 Use a reviewed Fabric Environment if Semantic Link is not already available.
 There is deliberately no `%pip install`, token setup, or automatic provisioning.
+The authorized execution-host rehearsal actually passed data notebooks 02–05
+on Runtime **2.0**. Its semantic model/DAX checks used separately scoped REST
+operations; that does not verify 07's native TOM runtime or XMLA prerequisites.
 
 1. The **platform owner pre-stages/selects an approved existing disposable
    sandbox workspace and schema-enabled Lakehouse on existing capacity**.

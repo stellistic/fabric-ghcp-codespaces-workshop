@@ -1,8 +1,10 @@
 # Preparation trail: evidence, not a fictional conversation
 
-This is the preparation record for **this implementation**. It is not a
-reconstruction of an earlier Copilot chat. No live Fabric resource, successful
-Codespaces login, browser screenshot or customer defect investigation is claimed.
+This is the preparation record for **this implementation**, not a reconstruction
+of an earlier Copilot chat. The original delivery at `0d220ea` was offline-only;
+the later explicitly authorized execution-host-to-Fabric rehearsal is recorded
+below. No successful Codespaces login, browser screenshot or customer defect
+investigation is claimed.
 
 ## Real work brief and decisions
 
@@ -91,7 +93,8 @@ or substitute invented output in a demo.
 | Notebook source generation and static validity | Executable local checks; not proof that Fabric runtime executed them |
 | Copilot CLI/Fabric CLI command interfaces | Public documentation and local help checked; no account login performed |
 | Devcontainer/Codespaces runtime | Configured, **not boot-tested here**: the available Docker client could not connect to a daemon |
-| Fabric notebook/model execution and actual DAX | **Pending** approved target, identity/security/network POC and human authorization |
+| Fabric data notebooks 02/03/04/05 | **Passed from the approved execution host**, not from Codespaces; see follow-up evidence below |
+| Core Direct Lake model and actual DAX | **Passed from the approved execution host**; 07's TOM runtime path remains a separate unexecuted gate |
 | Group concurrency/capacity readiness | **Pending** measured rehearsal; no capacity created or resized |
 | Customer domain/report objective | **Pending** approved metadata, domain selection and SME definitions |
 
@@ -102,8 +105,72 @@ The pinned container manifest and local pinned Copilot CLI executable were
 checked successfully. This confirms artifact availability/version only, not a
 container boot, login, network policy or live Fabric run.
 
-Final local release gate: `make gates` reported **205 passed** and passed Ruff,
+Original offline release gate: `make gates` reported **205 passed** and passed Ruff,
 Bash syntax, generated-notebook freshness, generated expected-results freshness,
 and dictionary/model cohesion. Python compilation and `npm ls --depth=0` also
 passed. The shipped `demo.yaml` was exercised against live preflight and correctly
 refused access before any Fabric invocation. No live acceptance result is implied.
+
+## Authorized execution-host-to-Fabric follow-up
+
+After separate user approval of an isolated existing-capacity rehearsal target,
+the existing execution host completed real Fabric preflight, one schema-enabled
+synthetic Lakehouse creation, upload of the thirteen approved CSVs, publication,
+and sequential execution of notebooks **02 -> 03 -> 04 -> 05** on Fabric Runtime
+**2.0**. All four jobs completed with their real count/quarantine/relationship/KPI
+gates. The workspace's session API subsequently reported all four owned Spark
+sessions `Succeeded` with end timestamps. No tenant/RBAC settings were changed.
+Capacity lifecycle remained with the separately authorized coordinator.
+
+Actual OneLake production/date CSVs were downloaded and SHA-256 compared with
+the committed synthetic inputs. Both matched byte-for-byte; the independent
+source SQL over those downloaded files produced **30 months** and **1,032,704
+actual units**. This is stronger evidence than querying a headline card, but
+still does not establish a real customer's definitions. The source SQL ran
+locally over downloaded actual OneLake files; this rehearsal did not execute
+the optional SQL-endpoint T-SQL query.
+
+The first live notebook create exposed a real adapter defect: Fabric returned
+an HTTPS regional `wabi-*.analysis.windows.net` LRO location rather than the
+canonical host. The request outcome was reconciled by exact owned metadata and
+remote notebook content, without resubmitting or creating a duplicate. The fix
+requires the regional host to match the authenticated response's
+`home-cluster-uri`, keeps the exact operation/job path, and reissues only
+canonical relative CLI routes. Its regression failed first, then passed;
+unknown/mismatched hosts still fail closed. The updated local release gate
+reports **211 tests passed**, including a regression that rejects an extra virtual
+blank month even when the calendar rows otherwise match.
+
+The same isolated rehearsal created one real **12-table Direct Lake** semantic
+model from its approved Gold OneLake tables using the documented creation API.
+Its full original definition was saved before a hash-reviewed diff added only
+the **18 core relationships and 14 measures**. Tables, partitions, sources and
+other metadata were preserved. All 14 actual remote DAX measure checks passed,
+and every one of the 30 monthly DAX rows matched the independent SQL oracle over
+the byte-verified OneLake inputs.
+
+The controlled live reporting exercise then changed **only** the production
+Date relationship's active state. After a verified metadata refresh, actual DAX
+returned the all-time **1,032,704** units for each of the 30 calendar months and
+also exposed **one virtual blank-month row**. Both the wrong values and extra
+row were retained as failed evidence; they were not filtered away to force a
+match. A separately hash-reviewed one-edge repair, completed refresh and the
+same independent queries restored **exactly 30 matching months**, no extra
+blank row, and all 14 original measure values. The model was left healthy.
+
+Two service-contract details were recorded rather than hidden: a successful
+definition-update LRO can have no result body (`OperationHasNoResult`), and
+immediate post-update queries returned missing-table metadata until the model's
+refresh completed. Neither a write acknowledgment nor that intermediate error
+was counted as business acceptance. The reusable notebook adapter only uses
+result-bearing create/get-definition operations; model setup/reconciliation
+was a separately approved, exact-ID REST rehearsal. Notebook 07's native TOM
+recovery path was **not executed**, so its environment/XMLA prerequisites remain
+a separate rehearsal gate.
+
+Codespaces itself was **not created or billed**: the linked automation
+credential could read repository/machine metadata, but listing was denied for
+missing Codespaces permission. No credentials were substituted, caches copied,
+identities switched or denied APIs retried without changed authorization.
+Browser-first onboarding, Codespaces-to-Fabric, Copilot CLI in that Codespace,
+customer-device/Conditional Access and group rehearsal therefore remain **pending**.

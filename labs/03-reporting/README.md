@@ -52,6 +52,10 @@ match independently in every month and in the overall total. Missing/extra
 months, duplicate month rows, nulls, non-finite quantities, fractional counts,
 or a rearrangement with the same grand total fail. Counts use **zero tolerance**.
 Rounded headline rates use absolute tolerance 0.00005 only; revenue uses 0.01.
+Actual DAX can also expose a virtual blank/unknown month when Date filtering is
+disconnected. Keep that row in the evidence and reject it; do not filter it away
+just to match the expected month count. The narrow offline simulator does not
+attempt to reproduce every engine-generated row.
 
 **Live extension:** use a separately approved copied model, snapshot its
 definition, and inspect 07's scoped plan. Do **not** inject this fault into a real
@@ -80,6 +84,10 @@ customer report, use that domain's separately approved source/month SQL and
 definitions instead; the K-Corp numbers are never its acceptance oracle.
 The CLI validates supplied evidence, not its authenticity; record query text,
 timestamp, exact model/workspace, filter context and source version for peer review.
+After a live semantic-definition change, complete the separately approved model
+metadata refresh and verify query readiness before judging business results.
+The host rehearsal encountered missing-table query metadata immediately after
+an update; a successful definition write alone was not acceptance evidence.
 
 **Independent challenge:** investigate a different month/filter without having
 Copilot suggest the expected answer first. Explain why a correct total or plant

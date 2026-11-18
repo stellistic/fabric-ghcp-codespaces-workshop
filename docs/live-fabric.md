@@ -1,11 +1,14 @@
 # Live Fabric adapter — explicit sandbox opt-in
 
-**LIVE POC: PENDING. Group rehearsal: PENDING.** Offline tests verify transport and
-guard contracts, not actual tenant authentication, Conditional Access, network
-access, encrypted cache availability, capacity, REST compatibility or a real
-workspace. No live authentication, data access or resource calls were made while
-building this adapter. This is a disposable synthetic workshop path, not a
-production deployment/recovery tool.
+**Codespaces POC and group rehearsal: PENDING.** An explicitly authorized
+execution-host rehearsal verified real tenant/workspace preflight, synthetic
+file upload, notebook publication and all four core data notebooks on Fabric
+Runtime 2.0, followed by separately scoped REST model/DAX reconciliation and a
+controlled Date-fault/repair proof. Those model calls are not extra adapter
+actions. This does **not** prove Codespaces authentication, Conditional Access,
+customer-device routing, group concurrency or a production recovery path.
+The [preparation trail](preparation-trail.md) separates the original offline
+delivery from the later authorized live rehearsal and records remaining gates.
 
 Use the [browser-first Codespaces setup](codespaces.md). GitHub Copilot assists with
 code; Microsoft Fabric executes notebooks. Native Fabric Copilot and AI Functions
@@ -151,10 +154,15 @@ Changed code/binding produces a new name/state entry; it does not replace old it
   `notebook-content.ipynb` part with `payloadType: InlineBase64`. The optional
   `.platform` part is not sent.
 - HTTP `202` means **accepted, not created/completed**. Persist the operation/job
-  UUID before polling. Validate the exact HTTPS Fabric v1 location, respect
+  UUID before polling. Validate the exact HTTPS Fabric v1 path, respect
   `Retry-After`, poll operation state and then its `/result`, or poll the recorded
   job instance. Polling deadlines survive process restarts; immediate retries
   cannot bypass a saved service delay. Unknown/failed statuses are never success.
+  Fabric can return a regional `wabi-*.analysis.windows.net` Location: it is
+  accepted only when its host matches the same authenticated response's
+  `home-cluster-uri`. The adapter never uses the response URL as an arbitrary
+  credential destination: it reissues only the validated relative route through
+  `fab api`, leaving authenticated service routing to the supported CLI.
 - State is stored under `.state/live/<workspace>/ghcp_*.json`, with private files
   and an exclusive per-entry lock. Preserve accepted-operation state and use the
   read-only `get-results` to resume creation polling or retrieve the last known
@@ -183,6 +191,12 @@ closed rather than running unverified code.
 
 1. Stop/inspect any running job using its recorded workspace, notebook and job UUIDs
    in the Fabric UI. Check completion/cancellation there; a local timeout is not proof.
+   Job `Completed` can precede Spark-session shutdown: inspect the documented
+   workspace `spark/livySessions` read API and confirm the exact owned sessions
+   have terminal states/end timestamps. A `JobAlreadyCompleted` cancellation
+   response is not evidence that a session has stopped. The host rehearsal
+   confirmed all four sessions eventually reached `Succeeded`; do not assume
+   that outcome for another run.
 2. Read your `.state/live/<workspace>/ghcp_*.json` files locally. In the **selected
    sandbox workspace**, verify each recorded notebook UUID, deterministic name and
    ownership description. For accepted creations, resolve the saved operation ID;

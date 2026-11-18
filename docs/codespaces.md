@@ -8,7 +8,12 @@ The workshop title is **GitHub Copilot Workshop**.
 offline adapters are not evidence that organization policy, Conditional Access,
 browser callbacks, encrypted keyrings, network routing or Fabric capacity work for
 your participants. Rehearse with an explicitly approved disposable sandbox first.
-No live login/resource calls were authorized or performed for this implementation.
+No live login/resource calls were authorized or performed in the original
+offline delivery.
+
+The later authorized **execution-host-to-Fabric** rehearsal is recorded separately
+in the [preparation trail](preparation-trail.md); it does not change this
+Codespaces readiness status.
 
 ## What participants need
 
@@ -56,6 +61,23 @@ uv run --frozen python -m pytest tests/test_live.py --basetemp=.state/pytest-liv
 
 Keep CLI debug logging disabled. Fabric encrypted-cache fallback is explicitly
 **false**; the setup never disables keyring/encryption.
+
+### Organizer automation permission gate
+
+Creating a Codespace in the GitHub browser and managing one through a linked
+automation credential are separate authorization paths. In this implementation's
+attempted automated rehearsal, repository/machine discovery worked, but the
+linked credential's Codespaces listing was denied for missing `codespace` scope;
+no Codespace was created or billed. This is not evidence that a participant's
+normal browser creation flow is blocked.
+
+For a CLI-managed OAuth login, use GitHub's documented consent flow
+`gh auth refresh -h github.com -s codespace` and approve it as the intended
+account. An app-injected `GH_TOKEN` takes precedence over stored CLI logins:
+refreshing a different keyring account will not amend that credential. Request
+the host's supported linked-account permission refresh; do not unset/substitute
+tokens, switch identities, transplant caches or retry a denied API until
+authorization has actually changed.
 
 ## GitHub Copilot login and workspace trust
 

@@ -78,10 +78,15 @@ The offline path needs no Fabric account. For optional Fabric work, an owner
 pre-stages an approved, isolated sandbox on an existing supported capacity.
 See the [least-privilege action matrix and live commands](docs/live-fabric.md).
 
-**Live acceptance is pending** a one-user Codespaces proof of concept, security
-and data-handling approval, identity/Conditional Access/network checks, and a
-measured group rehearsal. No live workspace, capacity, model or customer data
-has been configured or verified by this implementation.
+**An authorized execution-host rehearsal has passed all four core Fabric data
+notebooks, all 14 actual model measures and all 30 source-to-DAX month checks.**
+A controlled live Date-relationship fault was reproduced and repaired, with
+the synthetic model restored healthy.
+This is **not** Codespaces-to-Fabric acceptance: the linked automation credential
+lacks Codespaces permission, and devcontainer boot, Copilot CLI connectivity
+from Codespaces, browser/customer-device Conditional Access and measured group
+concurrency remain pending. No customer data was used. The
+[preparation trail](docs/preparation-trail.md) records the distinct gates.
 
 Use [AGENTS.md](AGENTS.md) as the safety contract. Copy `demo.yaml` to ignored
 `demo.local.yaml` only after environment approval; overrides are complete files,

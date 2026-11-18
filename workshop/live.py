@@ -70,12 +70,28 @@ def _digest(value: object) -> str:
     return hashlib.sha256(_encoded(value)).hexdigest()
 
 
-def _location(value: object, expected: str) -> str:
+def _trusted_fabric_host(parsed, home_cluster: str | None) -> bool:
+    if parsed.netloc == "api.fabric.microsoft.com":
+        return True
+    if not isinstance(home_cluster, str):
+        return False
+    home = _url(home_cluster)
+    return (
+        home.scheme == "https"
+        and home.netloc == parsed.netloc
+        and re.fullmatch(r"wabi-[a-z0-9-]+\.analysis\.windows\.net", home.netloc) is not None
+        and home.path in ("", "/")
+        and not home.query
+        and not home.fragment
+    )
+
+
+def _location(value: object, expected: str, *, home_cluster: str | None = None) -> str:
     """Only convert an exact Fabric v1 resource URL into an internally generated route."""
     if not isinstance(value, str):
         raise LiveError("missing Fabric operation location")
     parsed = _url(value)
-    if (parsed.scheme != "https" or parsed.netloc != "api.fabric.microsoft.com"
+    if (parsed.scheme != "https" or not _trusted_fabric_host(parsed, home_cluster)
             or parsed.query or parsed.fragment or parsed.path != f"/v1/{expected}"):
         raise LiveError("untrusted Fabric operation location")
     return expected
@@ -457,7 +473,7 @@ class LiveAdapter:
             operation = _url(location).path.rsplit("/", 1)[-1]
         operation = _uuid(operation)
         if location is not None:
-            _location(location, f"operations/{operation}")
+            _location(location, f"operations/{operation}", home_cluster=response.headers.get("home-cluster-uri"))
         return operation
 
     def _wait_operation(self, operation: str, headers: dict, *,
@@ -601,7 +617,8 @@ class LiveAdapter:
         if not isinstance(location, str):
             raise LiveError("missing job instance location; inspect state before retrying")
         job_id = _uuid(_url(location).path.rsplit("/", 1)[-1])
-        _location(location, f"{self.base}/items/{state['item_id']}/jobs/instances/{job_id}")
+        _location(location, f"{self.base}/items/{state['item_id']}/jobs/instances/{job_id}",
+                  home_cluster=response.headers.get("home-cluster-uri"))
         state.update({"job_id": job_id, "job_status": "NotStarted", "phase": "created"})
         self._write(self._state_path(expected), state)
         state["poll_after"] = time.time() + self._delay(response.headers)

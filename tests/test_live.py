@@ -356,6 +356,42 @@ def test_create_lro_is_polled_and_result_id_persisted(config, root, cli):
     assert json.loads(state_file(root).read_text())["operation_id"] == OPERATION
 
 
+def test_regional_create_lro_is_reissued_only_through_canonical_routes(config, root, cli):
+    regional = "https://wabi-west-us3-a-primary-redirect.analysis.windows.net"
+    cli.replies = preflight() + [
+        response({"value": []}),
+        response(status=202, headers={
+            "Location": f"{regional}/v1/operations/{OPERATION}",
+            "home-cluster-uri": regional + "/",
+            "x-ms-operation-id": OPERATION,
+            "Retry-After": "0",
+        }),
+        response({"status": "Succeeded"}),
+        lambda: response(notebook_item(cli)),
+    ]
+    result = execute(config, root, "publish-notebook", notebook="bronze", participant="team01", approval=WORKSPACE)
+    assert result["item_id"] == ITEM
+    assert cli.calls[-2][2] == f"operations/{OPERATION}"
+    assert cli.calls[-1][2] == f"operations/{OPERATION}/result"
+    assert not any(regional in arg for call in cli.calls for arg in call)
+
+
+@pytest.mark.parametrize("home", [
+    None,
+    "https://evil.example/",
+    "https://wabi-other-primary-redirect.analysis.windows.net/",
+])
+def test_regional_operation_rejects_missing_or_mismatched_home_cluster(home):
+    headers = {
+        "location": f"https://wabi-west-us3-a-primary-redirect.analysis.windows.net/v1/operations/{OPERATION}",
+        "x-ms-operation-id": OPERATION,
+    }
+    if home is not None:
+        headers["home-cluster-uri"] = home
+    with pytest.raises(live.LiveError):
+        live.LiveAdapter._operation(live.Response({}, 202, headers))
+
+
 @pytest.mark.parametrize("headers", [
     {"Location": f"https://evil.example/v1/operations/{OPERATION}"},
     {"Location": f"https://api.fabric.microsoft.com@evil.example/v1/operations/{OPERATION}"},
@@ -414,6 +450,23 @@ def test_run_bounded_poll_and_read_only_results(config, root, cli):
     saved = root / result["results_file"]
     assert json.loads(saved.read_text())["exitValue"] == "summary"
     assert saved.stat().st_mode & 0o777 == 0o600
+
+
+def test_regional_job_location_keeps_exact_owned_ids_and_canonical_polling(config, root, cli):
+    publish(config, root, cli)
+    regional = "https://wabi-west-us3-a-primary-redirect.analysis.windows.net"
+    cli.replies = preflight() + owned_replies(cli) + [
+        response(status=202, headers={
+            "Location": f"{regional}/v1/{BASE}/items/{ITEM}/jobs/instances/{JOB}",
+            "home-cluster-uri": regional + "/",
+            "Retry-After": "0",
+        }),
+        response({"id": JOB, "itemId": ITEM, "status": "Completed"}),
+    ]
+    result = execute(config, root, "run-notebook", notebook="bronze", participant="team01", approval=WORKSPACE)
+    assert result["job_id"] == JOB
+    assert cli.calls[-1][2] == f"{BASE}/items/{ITEM}/jobs/instances/{JOB}"
+    assert not any(regional in arg for call in cli.calls for arg in call)
 
 
 @pytest.mark.parametrize("status", ["Failed", "Cancelled", "unexpected"])

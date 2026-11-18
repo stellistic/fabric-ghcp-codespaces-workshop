@@ -180,6 +180,10 @@ def test_repair_rejects_drift(gold, tmp_path):
         [{"YearMonth": "2024-01", "Actual Units": 1}] * 2,
         [{"YearMonth": "2024-01", "Actual Units": float("nan")}],
         [{"YearMonth": "2024-01", "Actual Units": 10.1}],
+        [
+            {"YearMonth": None, "Actual Units": 10},
+            {"YearMonth": "2024-01", "Actual Units": 10},
+        ],
     ],
 )
 def test_monthly_reconciliation_rejects_bad_or_incomplete_shape(actual):
